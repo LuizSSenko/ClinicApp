@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { TermsDialog } from "@/components/shared/terms-dialog"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -21,6 +22,8 @@ export default function SignUpPage() {
   const [userType, setUserType] = useState<UserType>("patient")
   const [clinicName, setClinicName] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [termsDialogOpen, setTermsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -32,6 +35,12 @@ export default function SignUpPage() {
 
     if (password !== repeatPassword) {
       setError("As senhas não coincidem")
+      setIsLoading(false)
+      return
+    }
+
+    if (!termsAccepted) {
+      setError("Você deve aceitar os Termos de Uso para continuar")
       setIsLoading(false)
       return
     }
@@ -168,6 +177,24 @@ export default function SignUpPage() {
                   />
                 </div>
 
+                <div className="flex items-center justify-between p-3 rounded-lg border border-muted bg-muted/30">
+                  <div className="text-sm">
+                    {termsAccepted ? (
+                      <p className="text-green-600 font-semibold">✓ Termos aceitos</p>
+                    ) : (
+                      <p className="text-muted-foreground">Você precisa aceitar os termos</p>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setTermsDialogOpen(true)}
+                  >
+                    Ver Termos
+                  </Button>
+                </div>
+
                 {error && <p className="text-sm text-destructive">{error}</p>}
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
@@ -183,6 +210,15 @@ export default function SignUpPage() {
             </form>
           </CardContent>
         </Card>
+
+        <TermsDialog
+          open={termsDialogOpen}
+          onAccept={() => {
+            setTermsAccepted(true)
+            setTermsDialogOpen(false)
+          }}
+          onReject={() => setTermsDialogOpen(false)}
+        />
       </div>
     </div>
   )
