@@ -87,21 +87,36 @@ export function PatientDashboardClient({ profile, initialAppointments }: Patient
   return (
     <div className="min-h-svh bg-background">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div>
-            <h1 className="text-xl font-semibold">Olá, {currentProfile.full_name}</h1>
-            <p className="text-sm text-muted-foreground">Seus agendamentos</p>
+      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-3 md:px-4">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-base md:text-lg lg:text-xl font-semibold truncate">
+              Olá, {currentProfile.full_name.split(' ')[0]}
+            </h1>
+            <p className="text-xs md:text-sm text-muted-foreground">Seus agendamentos</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2 items-center ml-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" onClick={() => setSettingsDialogOpen(true)}>
-              <Settings className="mr-2 h-4 w-4" />
-              Configurações
+            
+            {/* Desktop menu */}
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => setSettingsDialogOpen(true)}>
+              <Settings className="mr-1 md:mr-2 h-4 w-4" />
+              <span className="text-xs md:text-sm">Configurações</span>
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Sair
+            
+            {/* Mobile menu - icon only */}
+            <Button variant="ghost" size="icon" className="sm:hidden h-8 w-8" onClick={() => setSettingsDialogOpen(true)} title="Configurações">
+              <Settings className="h-4 w-4" />
+            </Button>
+            
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-xs md:text-sm" onClick={handleLogout}>
+              <LogOut className="mr-1 md:mr-2 h-4 w-4" />
+              <span>Sair</span>
+            </Button>
+            
+            {/* Mobile logout - icon only */}
+            <Button variant="ghost" size="icon" className="sm:hidden h-8 w-8" onClick={handleLogout} title="Sair">
+              <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
